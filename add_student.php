@@ -2,14 +2,16 @@
 
 header('Content-Type: application/json');
 
-$dataFile = 'students.json';
-$response = ['success' => false, 'message' => ''];
+require 'db_connect.php';
 
+$fullname = $_POST['fullname'] ?? '';
+$matricule = $_POST['matricule'] ?? '';
+$group_id = $_POST['group_id'] ?? '';
 
-$student_id = $_POST['student_id'] ?? '';
-$name = $_POST['name'] ?? '';
-$group = $_POST['group'] ?? '';
+$stmt = $pdo->prepare("INSERT INTO students (fullname, matricule, group_id) VALUES (?, ?, ?)");
+$stmt->execute([$fullname, $matricule, $group_id]);
 
+echo json_encode(['success'=>true,'message'=>'Student added to DB']);
 
 if (!preg_match('/^[0-9]+$/', $student_id)) {
     $response['message'] = 'Student ID must be numbers only';
